@@ -1,0 +1,1129 @@
+{
+  "duplicate_analysis": {
+    "train_rows": 10003,
+    "train_dup_clusters_cos85": 7928,
+    "test_rows": 3080,
+    "test_exact_norm_matches": 11,
+    "test_cos_ge_095": 370,
+    "test_cos_ge_095_same_label": 359,
+    "test_cos_ge_090": 701,
+    "test_cos_ge_090_same_label": 664,
+    "test_cos_ge_085": 1048,
+    "test_cos_ge_085_same_label": 980,
+    "test_novel_lt_085": 2032
+  },
+  "model_comparison_80pct": {
+    "multinomial_nb": {
+      "fit_seconds": 0.13,
+      "ms_per_msg": 1.87,
+      "temperature": 0.6512,
+      "ece_raw": 0.1325,
+      "ece_cal": 0.0115,
+      "acc_all": {
+        "estimate": 0.8331,
+        "low": 0.8195,
+        "high": 0.8459,
+        "boot_low": 0.8205,
+        "boot_high": 0.8458,
+        "n_items": 3080,
+        "widened": true,
+        "significant": false
+      },
+      "acc_novel": {
+        "estimate": 0.7908,
+        "low": 0.7726,
+        "high": 0.8081,
+        "boot_low": 0.7731,
+        "boot_high": 0.8081,
+        "n_items": 2032,
+        "widened": true,
+        "significant": false
+      },
+      "acc_dup": {
+        "estimate": 0.9151,
+        "low": 0.8966,
+        "high": 0.9313,
+        "boot_low": 0.8979,
+        "boot_high": 0.9313,
+        "n_items": 1048,
+        "widened": true,
+        "significant": false
+      },
+      "urgent_any_recall": {
+        "estimate": 0.9458,
+        "low": 0.9095,
+        "high": 0.9708,
+        "boot_low": 0.9167,
+        "boot_high": 0.9708,
+        "n_items": 240,
+        "widened": true,
+        "significant": false
+      },
+      "routing_threshold": 2.1908,
+      "review_fraction": 0.0107,
+      "realised_cost_no_review": 0.2756,
+      "realised_cost_with_review": 0.28,
+      "urgent_missed_after_review": 2,
+      "urgent_caught_after_review": 238
+    },
+    "word_logreg": {
+      "fit_seconds": 4.56,
+      "ms_per_msg": 0.36,
+      "temperature": 0.5175,
+      "ece_raw": 0.2477,
+      "ece_cal": 0.0095,
+      "acc_all": {
+        "estimate": 0.8815,
+        "low": 0.8696,
+        "high": 0.8929,
+        "boot_low": 0.8705,
+        "boot_high": 0.8929,
+        "n_items": 3080,
+        "widened": true,
+        "significant": false
+      },
+      "acc_novel": {
+        "estimate": 0.8445,
+        "low": 0.8281,
+        "high": 0.8596,
+        "boot_low": 0.8287,
+        "boot_high": 0.8593,
+        "n_items": 2032,
+        "widened": true,
+        "significant": false
+      },
+      "acc_dup": {
+        "estimate": 0.9532,
+        "low": 0.9387,
+        "high": 0.9647,
+        "boot_low": 0.9399,
+        "boot_high": 0.9647,
+        "n_items": 1048,
+        "widened": true,
+        "significant": false
+      },
+      "urgent_any_recall": {
+        "estimate": 0.9208,
+        "low": 0.8797,
+        "high": 0.9542,
+        "boot_low": 0.8833,
+        "boot_high": 0.9542,
+        "n_items": 240,
+        "widened": true,
+        "significant": false
+      },
+      "routing_threshold": 2.2692,
+      "review_fraction": 0.0019,
+      "realised_cost_no_review": 0.2006,
+      "realised_cost_with_review": 0.199,
+      "urgent_missed_after_review": 2,
+      "urgent_caught_after_review": 238
+    },
+    "word_svc": {
+      "fit_seconds": 0.48,
+      "ms_per_msg": 0.38,
+      "temperature": 0.1701,
+      "ece_raw": 0.8045,
+      "ece_cal": 0.0221,
+      "acc_all": {
+        "estimate": 0.8831,
+        "low": 0.8713,
+        "high": 0.8948,
+        "boot_low": 0.8718,
+        "boot_high": 0.8948,
+        "n_items": 3080,
+        "widened": true,
+        "significant": false
+      },
+      "acc_novel": {
+        "estimate": 0.8499,
+        "low": 0.8337,
+        "high": 0.8648,
+        "boot_low": 0.8337,
+        "boot_high": 0.8647,
+        "n_items": 2032,
+        "widened": true,
+        "significant": false
+      },
+      "acc_dup": {
+        "estimate": 0.9475,
+        "low": 0.9323,
+        "high": 0.9599,
+        "boot_low": 0.9342,
+        "boot_high": 0.9599,
+        "n_items": 1048,
+        "widened": true,
+        "significant": false
+      },
+      "urgent_any_recall": {
+        "estimate": 0.9417,
+        "low": 0.9045,
+        "high": 0.9708,
+        "boot_low": 0.9083,
+        "boot_high": 0.9708,
+        "n_items": 240,
+        "widened": true,
+        "significant": false
+      },
+      "routing_threshold": 1.8898,
+      "review_fraction": 0.0302,
+      "realised_cost_no_review": 0.189,
+      "realised_cost_with_review": 0.2089,
+      "urgent_missed_after_review": 1,
+      "urgent_caught_after_review": 239
+    },
+    "hybrid_svc": {
+      "fit_seconds": 4.16,
+      "ms_per_msg": 2.99,
+      "temperature": 0.1898,
+      "ece_raw": 0.8096,
+      "ece_cal": 0.0168,
+      "acc_all": {
+        "estimate": 0.9052,
+        "low": 0.8943,
+        "high": 0.915,
+        "boot_low": 0.8945,
+        "boot_high": 0.9149,
+        "n_items": 3080,
+        "widened": true,
+        "significant": false
+      },
+      "acc_novel": {
+        "estimate": 0.8784,
+        "low": 0.8635,
+        "high": 0.8927,
+        "boot_low": 0.8637,
+        "boot_high": 0.8927,
+        "n_items": 2032,
+        "widened": true,
+        "significant": false
+      },
+      "acc_dup": {
+        "estimate": 0.9571,
+        "low": 0.943,
+        "high": 0.9685,
+        "boot_low": 0.9447,
+        "boot_high": 0.9685,
+        "n_items": 1048,
+        "widened": true,
+        "significant": false
+      },
+      "urgent_any_recall": {
+        "estimate": 0.9542,
+        "low": 0.9198,
+        "high": 0.9792,
+        "boot_low": 0.925,
+        "boot_high": 0.9792,
+        "n_items": 240,
+        "widened": true,
+        "significant": false
+      },
+      "routing_threshold": 1.8928,
+      "review_fraction": 0.0208,
+      "realised_cost_no_review": 0.1555,
+      "realised_cost_with_review": 0.1727,
+      "urgent_missed_after_review": 1,
+      "urgent_caught_after_review": 239
+    },
+    "hybrid_logreg": {
+      "fit_seconds": 44.64,
+      "ms_per_msg": 2.15,
+      "temperature": 0.677,
+      "ece_raw": 0.1159,
+      "ece_cal": 0.0139,
+      "acc_all": {
+        "estimate": 0.912,
+        "low": 0.9015,
+        "high": 0.9218,
+        "boot_low": 0.9026,
+        "boot_high": 0.9218,
+        "n_items": 3080,
+        "widened": true,
+        "significant": false
+      },
+      "acc_novel": {
+        "estimate": 0.8868,
+        "low": 0.8723,
+        "high": 0.9001,
+        "boot_low": 0.8725,
+        "boot_high": 0.9001,
+        "n_items": 2032,
+        "widened": true,
+        "significant": false
+      },
+      "acc_dup": {
+        "estimate": 0.9609,
+        "low": 0.9474,
+        "high": 0.9714,
+        "boot_low": 0.9485,
+        "boot_high": 0.9714,
+        "n_items": 1048,
+        "widened": true,
+        "significant": false
+      },
+      "urgent_any_recall": {
+        "estimate": 0.9625,
+        "low": 0.9303,
+        "high": 0.9833,
+        "boot_low": 0.9375,
+        "boot_high": 0.9833,
+        "n_items": 240,
+        "widened": true,
+        "significant": false
+      },
+      "routing_threshold": 1.8799,
+      "review_fraction": 0.0169,
+      "realised_cost_no_review": 0.1669,
+      "realised_cost_with_review": 0.1802,
+      "urgent_missed_after_review": 3,
+      "urgent_caught_after_review": 237
+    }
+  },
+  "paired_comparisons": {
+    "acc_hybrid_logreg_vs_word_logreg": {
+      "estimate": 0.0305,
+      "low": 0.0227,
+      "high": 0.0383,
+      "boot_low": 0.0227,
+      "boot_high": 0.0383,
+      "n_items": 3080,
+      "widened": false,
+      "significant": true
+    },
+    "acc_hybrid_logreg_vs_hybrid_svc": {
+      "estimate": 0.0068,
+      "low": 0.0012,
+      "high": 0.0123,
+      "boot_low": 0.0013,
+      "boot_high": 0.0123,
+      "n_items": 3080,
+      "widened": true,
+      "significant": true
+    },
+    "urg_any_hybrid_logreg_vs_word_logreg": {
+      "estimate": 0.0417,
+      "low": 0.0167,
+      "high": 0.0667,
+      "boot_low": 0.0167,
+      "boot_high": 0.0667,
+      "n_items": 240,
+      "widened": false,
+      "significant": true
+    }
+  },
+  "final_bundle": {
+    "oof_accuracy": 0.8961,
+    "temperature": 0.6534,
+    "risk_threshold": 2.1317,
+    "ood_sim_threshold": 0.1531,
+    "test_acc_all": {
+      "estimate": 0.9156,
+      "low": 0.9052,
+      "high": 0.925,
+      "boot_low": 0.9058,
+      "boot_high": 0.925,
+      "n_items": 3080,
+      "widened": true,
+      "significant": false
+    },
+    "test_acc_novel": {
+      "estimate": 0.8898,
+      "low": 0.8754,
+      "high": 0.9027,
+      "boot_low": 0.8765,
+      "boot_high": 0.9026,
+      "n_items": 2032,
+      "widened": true,
+      "significant": false
+    },
+    "test_acc_dup": {
+      "estimate": 0.9656,
+      "low": 0.9528,
+      "high": 0.9761,
+      "boot_low": 0.9542,
+      "boot_high": 0.9761,
+      "n_items": 1048,
+      "widened": true,
+      "significant": false
+    },
+    "test_urgent_exact_recall": 0.9292,
+    "test_urgent_any_recall": {
+      "estimate": 0.9708,
+      "low": 0.941,
+      "high": 0.9917,
+      "boot_low": 0.9499,
+      "boot_high": 0.9917,
+      "n_items": 240,
+      "widened": true,
+      "significant": false
+    },
+    "test_urgent_caught_after_review": "239/240",
+    "test_review_fraction": 0.0029,
+    "test_ece_raw": 0.0942,
+    "test_ece_calibrated": 0.009,
+    "test_realised_cost_no_review": 0.1409,
+    "test_realised_cost_with_review": 0.1414,
+    "test_ood_flagged_pct": 0.0065,
+    "ms_per_msg_with_explanation": 28.8
+  },
+  "per_category_stats": {
+    "contactless_not_working": {
+      "train_count": 35,
+      "test_count": 40,
+      "is_urgent": false,
+      "recall_ci": {
+        "estimate": 0.9,
+        "low": 0.7695,
+        "high": 0.975,
+        "boot_low": 0.8,
+        "boot_high": 0.975,
+        "n_items": 40,
+        "widened": true,
+        "significant": false
+      }
+    },
+    "virtual_card_not_working": {
+      "train_count": 41,
+      "test_count": 40,
+      "is_urgent": false,
+      "recall_ci": {
+        "estimate": 0.825,
+        "low": 0.6805,
+        "high": 0.925,
+        "boot_low": 0.7,
+        "boot_high": 0.925,
+        "n_items": 40,
+        "widened": true,
+        "significant": false
+      }
+    },
+    "card_acceptance": {
+      "train_count": 59,
+      "test_count": 40,
+      "is_urgent": false,
+      "recall_ci": {
+        "estimate": 0.9,
+        "low": 0.7695,
+        "high": 0.975,
+        "boot_low": 0.8,
+        "boot_high": 0.975,
+        "n_items": 40,
+        "widened": true,
+        "significant": false
+      }
+    },
+    "card_swallowed": {
+      "train_count": 61,
+      "test_count": 40,
+      "is_urgent": false,
+      "recall_ci": {
+        "estimate": 0.9,
+        "low": 0.7695,
+        "high": 0.975,
+        "boot_low": 0.8,
+        "boot_high": 0.975,
+        "n_items": 40,
+        "widened": true,
+        "significant": false
+      }
+    },
+    "lost_or_stolen_card": {
+      "train_count": 82,
+      "test_count": 40,
+      "is_urgent": true,
+      "recall_ci": {
+        "estimate": 0.925,
+        "low": 0.8014,
+        "high": 1.0,
+        "boot_low": 0.825,
+        "boot_high": 1.0,
+        "n_items": 40,
+        "widened": true,
+        "significant": false
+      }
+    },
+    "card_payment_not_recognised": {
+      "train_count": 168,
+      "test_count": 40,
+      "is_urgent": true,
+      "recall_ci": {
+        "estimate": 0.9,
+        "low": 0.7695,
+        "high": 0.975,
+        "boot_low": 0.8,
+        "boot_high": 0.975,
+        "n_items": 40,
+        "widened": true,
+        "significant": false
+      }
+    },
+    "cash_withdrawal_not_recognised": {
+      "train_count": 160,
+      "test_count": 40,
+      "is_urgent": true,
+      "recall_ci": {
+        "estimate": 0.95,
+        "low": 0.835,
+        "high": 1.0,
+        "boot_low": 0.875,
+        "boot_high": 1.0,
+        "n_items": 40,
+        "widened": true,
+        "significant": false
+      }
+    },
+    "compromised_card": {
+      "train_count": 86,
+      "test_count": 40,
+      "is_urgent": true,
+      "recall_ci": {
+        "estimate": 0.925,
+        "low": 0.8014,
+        "high": 1.0,
+        "boot_low": 0.825,
+        "boot_high": 1.0,
+        "n_items": 40,
+        "widened": true,
+        "significant": false
+      }
+    },
+    "direct_debit_payment_not_recognised": {
+      "train_count": 182,
+      "test_count": 40,
+      "is_urgent": true,
+      "recall_ci": {
+        "estimate": 0.9,
+        "low": 0.7695,
+        "high": 0.975,
+        "boot_low": 0.8,
+        "boot_high": 0.975,
+        "n_items": 40,
+        "widened": true,
+        "significant": false
+      }
+    },
+    "lost_or_stolen_phone": {
+      "train_count": 121,
+      "test_count": 40,
+      "is_urgent": true,
+      "recall_ci": {
+        "estimate": 0.975,
+        "low": 0.8712,
+        "high": 1.0,
+        "boot_low": 0.925,
+        "boot_high": 1.0,
+        "n_items": 40,
+        "widened": true,
+        "significant": false
+      }
+    }
+  },
+  "label_shuffle_test_acc": 0.0123,
+  "new_wording_probes": [
+    {
+      "text": "Somebody grabbed my handbag with my debit card inside, lock it asap!",
+      "expected": "lost_or_stolen_card",
+      "predicted": "direct_debit_payment_not_recognised",
+      "chosen_queue": "direct_debit_payment_not_recognised",
+      "top_prob": 0.4722,
+      "send_to_person": true,
+      "is_ood": true
+    },
+    {
+      "text": "I see a 200 dollar charge at BestBuy I never made on my statement",
+      "expected": "card_payment_not_recognised",
+      "predicted": "extra_charge_on_statement",
+      "chosen_queue": "card_payment_not_recognised",
+      "top_prob": 0.902,
+      "send_to_person": false,
+      "is_ood": false
+    },
+    {
+      "text": "My mobile got snatched on the train, please freeze access",
+      "expected": "lost_or_stolen_phone",
+      "predicted": "card_payment_not_recognised",
+      "chosen_queue": "card_payment_not_recognised",
+      "top_prob": 0.4747,
+      "send_to_person": true,
+      "is_ood": true
+    },
+    {
+      "text": "ATM didnt spit out cash yet my balance went down by 100",
+      "expected": "cash_withdrawal_not_recognised",
+      "predicted": "wrong_amount_of_cash_received",
+      "chosen_queue": "wrong_amount_of_cash_received",
+      "top_prob": 0.7439,
+      "send_to_person": false,
+      "is_ood": false
+    },
+    {
+      "text": "Why did my account get billed twice for the same coffee shop?",
+      "expected": "transaction_charged_twice",
+      "predicted": "transaction_charged_twice",
+      "chosen_queue": "transaction_charged_twice",
+      "top_prob": 0.9954,
+      "send_to_person": false,
+      "is_ood": false
+    },
+    {
+      "text": "Can I change the passcode on my plastic card?",
+      "expected": "change_pin",
+      "predicted": "passcode_forgotten",
+      "chosen_queue": "passcode_forgotten",
+      "top_prob": 0.9976,
+      "send_to_person": false,
+      "is_ood": false
+    },
+    {
+      "text": "How long until my brand new card shows up in the mail?",
+      "expected": "card_arrival",
+      "predicted": "card_delivery_estimate",
+      "chosen_queue": "card_delivery_estimate",
+      "top_prob": 0.6657,
+      "send_to_person": false,
+      "is_ood": false
+    },
+    {
+      "text": "My direct debit has a charge from a company I don't know",
+      "expected": "direct_debit_payment_not_recognised",
+      "predicted": "direct_debit_payment_not_recognised",
+      "chosen_queue": "direct_debit_payment_not_recognised",
+      "top_prob": 1.0,
+      "send_to_person": false,
+      "is_ood": false
+    }
+  ],
+  "ood_probes": [
+    {
+      "text": "The ceiling tiles in the building are broken and leaking water.",
+      "top_prob_category": "country_support",
+      "top_prob": 0.756,
+      "max_centroid_sim": 0.1717,
+      "risk": 0.52,
+      "is_ood": false,
+      "send_to_person": false
+    },
+    {
+      "text": "What is the weather forecast for Mumbai tomorrow?",
+      "top_prob_category": "direct_debit_payment_not_recognised",
+      "top_prob": 0.2734,
+      "max_centroid_sim": 0.1395,
+      "risk": 1.493,
+      "is_ood": true,
+      "send_to_person": true
+    },
+    {
+      "text": "asdfghjkl qwerty zxcvbnm",
+      "top_prob_category": "why_verify_identity",
+      "top_prob": 0.0484,
+      "max_centroid_sim": 0.0493,
+      "risk": 2.111,
+      "is_ood": true,
+      "send_to_person": true
+    },
+    {
+      "text": "I want to apply for a 30 year fixed home mortgage refinance.",
+      "top_prob_category": "request_refund",
+      "top_prob": 0.1688,
+      "max_centroid_sim": 0.1063,
+      "risk": 1.909,
+      "is_ood": true,
+      "send_to_person": true
+    },
+    {
+      "text": "Please recommend a good Italian restaurant near the station.",
+      "top_prob_category": "transaction_charged_twice",
+      "top_prob": 0.2009,
+      "max_centroid_sim": 0.094,
+      "risk": 2.061,
+      "is_ood": true,
+      "send_to_person": true
+    }
+  ],
+  "total_test_errors": 260,
+  "total_urgent_errors_before_review": 17,
+  "sample_urgent_errors": [
+    {
+      "test_idx": 1672,
+      "text": "Someone stole my cards!",
+      "true_category": "lost_or_stolen_phone",
+      "pred_category": "lost_or_stolen_card",
+      "top3": [
+        [
+          "lost_or_stolen_card",
+          0.8042
+        ],
+        [
+          "compromised_card",
+          0.1137
+        ],
+        [
+          "lost_or_stolen_phone",
+          0.0347
+        ]
+      ],
+      "routed_decision": "lost_or_stolen_card",
+      "nearest_train_sim": 0.9202,
+      "nearest_train_cat": "lost_or_stolen_card",
+      "nearest_train_text": "Someone stole my card!"
+    },
+    {
+      "test_idx": 1486,
+      "text": "someone stole my money",
+      "true_category": "direct_debit_payment_not_recognised",
+      "pred_category": "cash_withdrawal_not_recognised",
+      "top3": [
+        [
+          "cash_withdrawal_not_recognised",
+          0.5225
+        ],
+        [
+          "lost_or_stolen_card",
+          0.3605
+        ],
+        [
+          "compromised_card",
+          0.0496
+        ]
+      ],
+      "routed_decision": "REVIEW",
+      "nearest_train_sim": 0.8989,
+      "nearest_train_cat": "lost_or_stolen_card",
+      "nearest_train_text": "Someone stole my card!"
+    },
+    {
+      "test_idx": 1107,
+      "text": "I have an unauthorized transaction on my statement",
+      "true_category": "card_payment_not_recognised",
+      "pred_category": "direct_debit_payment_not_recognised",
+      "top3": [
+        [
+          "direct_debit_payment_not_recognised",
+          0.8363
+        ],
+        [
+          "extra_charge_on_statement",
+          0.0985
+        ],
+        [
+          "card_payment_not_recognised",
+          0.0474
+        ]
+      ],
+      "routed_decision": "direct_debit_payment_not_recognised",
+      "nearest_train_sim": 0.8166,
+      "nearest_train_cat": "card_payment_not_recognised",
+      "nearest_train_text": "There is an unauthorized payment in my statement."
+    },
+    {
+      "test_idx": 1517,
+      "text": "I was charged on my account that shouldn't be there.",
+      "true_category": "direct_debit_payment_not_recognised",
+      "pred_category": "extra_charge_on_statement",
+      "top3": [
+        [
+          "extra_charge_on_statement",
+          0.3688
+        ],
+        [
+          "transaction_charged_twice",
+          0.161
+        ],
+        [
+          "cash_withdrawal_charge",
+          0.1529
+        ]
+      ],
+      "routed_decision": "direct_debit_payment_not_recognised",
+      "nearest_train_sim": 0.7741,
+      "nearest_train_cat": "cash_withdrawal_charge",
+      "nearest_train_text": "I got cash and was charged a fee that shouldn't be there!"
+    },
+    {
+      "test_idx": 476,
+      "text": "I cannot find my credit card.",
+      "true_category": "lost_or_stolen_card",
+      "pred_category": "topping_up_by_card",
+      "top3": [
+        [
+          "topping_up_by_card",
+          0.9736
+        ],
+        [
+          "top_up_failed",
+          0.0061
+        ],
+        [
+          "supported_cards_and_currencies",
+          0.0052
+        ]
+      ],
+      "routed_decision": "topping_up_by_card",
+      "nearest_train_sim": 0.7421,
+      "nearest_train_cat": "get_physical_card",
+      "nearest_train_text": "i cannot find my card PIN"
+    },
+    {
+      "test_idx": 2746,
+      "text": "How do I cancel my card? There are charges on my account that I didn't make.",
+      "true_category": "cash_withdrawal_not_recognised",
+      "pred_category": "card_payment_not_recognised",
+      "top3": [
+        [
+          "card_payment_not_recognised",
+          0.955
+        ],
+        [
+          "direct_debit_payment_not_recognised",
+          0.0178
+        ],
+        [
+          "cash_withdrawal_not_recognised",
+          0.0125
+        ]
+      ],
+      "routed_decision": "card_payment_not_recognised",
+      "nearest_train_sim": 0.6374,
+      "nearest_train_cat": "cash_withdrawal_not_recognised",
+      "nearest_train_text": "My identity has been stolen. I still have my physical card but there are charges I didn't make on my account. How do I cancel this card or dispute the charges?"
+    },
+    {
+      "test_idx": 2720,
+      "text": "Think someone has took money out with my card. What shall I do?",
+      "true_category": "cash_withdrawal_not_recognised",
+      "pred_category": "compromised_card",
+      "top3": [
+        [
+          "compromised_card",
+          0.744
+        ],
+        [
+          "cash_withdrawal_not_recognised",
+          0.1454
+        ],
+        [
+          "lost_or_stolen_card",
+          0.0882
+        ]
+      ],
+      "routed_decision": "compromised_card",
+      "nearest_train_sim": 0.5956,
+      "nearest_train_cat": "compromised_card",
+      "nearest_train_text": "What do I do if I think someone has used my card?"
+    },
+    {
+      "test_idx": 1425,
+      "text": "How do I freeze my account?",
+      "true_category": "compromised_card",
+      "pred_category": "terminate_account",
+      "top3": [
+        [
+          "terminate_account",
+          0.5922
+        ],
+        [
+          "card_payment_not_recognised",
+          0.2154
+        ],
+        [
+          "transfer_into_account",
+          0.0691
+        ]
+      ],
+      "routed_decision": "card_payment_not_recognised",
+      "nearest_train_sim": 0.5924,
+      "nearest_train_cat": "change_pin",
+      "nearest_train_text": "I can't freeze my account as I need the card as I am traveling, how do I change my pin?"
+    },
+    {
+      "test_idx": 467,
+      "text": "My card was taken from me",
+      "true_category": "lost_or_stolen_card",
+      "pred_category": "cash_withdrawal_not_recognised",
+      "top3": [
+        [
+          "cash_withdrawal_not_recognised",
+          0.4091
+        ],
+        [
+          "card_arrival",
+          0.1718
+        ],
+        [
+          "card_not_working",
+          0.0964
+        ]
+      ],
+      "routed_decision": "cash_withdrawal_not_recognised",
+      "nearest_train_sim": 0.5757,
+      "nearest_train_cat": "transfer_fee_charged",
+      "nearest_train_text": "Why was money taken for a transfer?"
+    },
+    {
+      "test_idx": 1112,
+      "text": "Somebody used my card to make a purchase",
+      "true_category": "card_payment_not_recognised",
+      "pred_category": "compromised_card",
+      "top3": [
+        [
+          "compromised_card",
+          0.8877
+        ],
+        [
+          "reverted_card_payment?",
+          0.0195
+        ],
+        [
+          "card_payment_fee_charged",
+          0.0144
+        ]
+      ],
+      "routed_decision": "compromised_card",
+      "nearest_train_sim": 0.5757,
+      "nearest_train_cat": "topping_up_by_card",
+      "nearest_train_text": "Can somebody else top up my account?"
+    }
+  ],
+  "sample_normal_errors": [
+    {
+      "test_idx": 2711,
+      "text": "My transfer is pending.",
+      "true_category": "balance_not_updated_after_bank_transfer",
+      "pred_category": "pending_transfer",
+      "top3": [
+        [
+          "pending_transfer",
+          0.9992
+        ],
+        [
+          "balance_not_updated_after_bank_transfer",
+          0.0007
+        ],
+        [
+          "failed_transfer",
+          0.0001
+        ]
+      ],
+      "routed_decision": "pending_transfer",
+      "nearest_train_sim": 1.0,
+      "nearest_train_cat": "pending_transfer",
+      "nearest_train_text": "Is my transfer pending?"
+    },
+    {
+      "test_idx": 11,
+      "text": "How long does a card delivery take?",
+      "true_category": "card_arrival",
+      "pred_category": "card_delivery_estimate",
+      "top3": [
+        [
+          "card_delivery_estimate",
+          0.993
+        ],
+        [
+          "card_arrival",
+          0.0036
+        ],
+        [
+          "order_physical_card",
+          0.0031
+        ]
+      ],
+      "routed_decision": "card_delivery_estimate",
+      "nearest_train_sim": 0.978,
+      "nearest_train_cat": "card_delivery_estimate",
+      "nearest_train_text": "how long does delivery take?"
+    },
+    {
+      "test_idx": 1193,
+      "text": "Do I need to verify my identity?",
+      "true_category": "why_verify_identity",
+      "pred_category": "verify_my_identity",
+      "top3": [
+        [
+          "verify_my_identity",
+          0.7357
+        ],
+        [
+          "why_verify_identity",
+          0.2617
+        ],
+        [
+          "unable_to_verify_identity",
+          0.0026
+        ]
+      ],
+      "routed_decision": "verify_my_identity",
+      "nearest_train_sim": 0.9741,
+      "nearest_train_cat": "why_verify_identity",
+      "nearest_train_text": "Why do I need to verify my identity?"
+    },
+    {
+      "test_idx": 271,
+      "text": "Can I exchange currencies?",
+      "true_category": "fiat_currency_support",
+      "pred_category": "exchange_via_app",
+      "top3": [
+        [
+          "exchange_via_app",
+          0.9001
+        ],
+        [
+          "exchange_charge",
+          0.0655
+        ],
+        [
+          "fiat_currency_support",
+          0.0342
+        ]
+      ],
+      "routed_decision": "exchange_via_app",
+      "nearest_train_sim": 0.9726,
+      "nearest_train_cat": "exchange_via_app",
+      "nearest_train_text": "how can i exchange currencies"
+    },
+    {
+      "test_idx": 2649,
+      "text": "Why didn`t my topup go through?",
+      "true_category": "top_up_failed",
+      "pred_category": "top_up_reverted",
+      "top3": [
+        [
+          "top_up_reverted",
+          0.8254
+        ],
+        [
+          "top_up_failed",
+          0.1426
+        ],
+        [
+          "declined_card_payment",
+          0.0114
+        ]
+      ],
+      "routed_decision": "top_up_reverted",
+      "nearest_train_sim": 0.9692,
+      "nearest_train_cat": "top_up_failed",
+      "nearest_train_text": "My top-up didn't go through"
+    },
+    {
+      "test_idx": 2604,
+      "text": "how do VR cards work",
+      "true_category": "get_disposable_virtual_card",
+      "pred_category": "getting_spare_card",
+      "top3": [
+        [
+          "getting_spare_card",
+          0.4456
+        ],
+        [
+          "card_not_working",
+          0.2057
+        ],
+        [
+          "get_disposable_virtual_card",
+          0.1536
+        ]
+      ],
+      "routed_decision": "getting_spare_card",
+      "nearest_train_sim": 0.9666,
+      "nearest_train_cat": "get_disposable_virtual_card",
+      "nearest_train_text": "how do the cards work?"
+    },
+    {
+      "test_idx": 3012,
+      "text": "I need to verify my identity",
+      "true_category": "verify_my_identity",
+      "pred_category": "why_verify_identity",
+      "top3": [
+        [
+          "why_verify_identity",
+          0.8956
+        ],
+        [
+          "verify_my_identity",
+          0.0969
+        ],
+        [
+          "unable_to_verify_identity",
+          0.0075
+        ]
+      ],
+      "routed_decision": "why_verify_identity",
+      "nearest_train_sim": 0.9622,
+      "nearest_train_cat": "why_verify_identity",
+      "nearest_train_text": "Why do I need to verify my identity?"
+    },
+    {
+      "test_idx": 2637,
+      "text": "how many transactions can i make with a disposable card",
+      "true_category": "get_disposable_virtual_card",
+      "pred_category": "disposable_card_limits",
+      "top3": [
+        [
+          "disposable_card_limits",
+          0.9998
+        ],
+        [
+          "get_disposable_virtual_card",
+          0.0001
+        ],
+        [
+          "card_not_working",
+          0.0
+        ]
+      ],
+      "routed_decision": "disposable_card_limits",
+      "nearest_train_sim": 0.9553,
+      "nearest_train_cat": "disposable_card_limits",
+      "nearest_train_text": "How many transactions can I make on my disposable card?"
+    },
+    {
+      "test_idx": 552,
+      "text": "How do I reset my PIN?",
+      "true_category": "pin_blocked",
+      "pred_category": "change_pin",
+      "top3": [
+        [
+          "change_pin",
+          0.5074
+        ],
+        [
+          "pin_blocked",
+          0.4262
+        ],
+        [
+          "get_physical_card",
+          0.0645
+        ]
+      ],
+      "routed_decision": "change_pin",
+      "nearest_train_sim": 0.951,
+      "nearest_train_cat": "change_pin",
+      "nearest_train_text": "How can I reset my PIN?"
+    },
+    {
+      "test_idx": 1858,
+      "text": "Why hasn't my transfer gone through yet?",
+      "true_category": "pending_transfer",
+      "pred_category": "failed_transfer",
+      "top3": [
+        [
+          "failed_transfer",
+          0.7909
+        ],
+        [
+          "transfer_not_received_by_recipient",
+          0.1077
+        ],
+        [
+          "balance_not_updated_after_bank_transfer",
+          0.0518
+        ]
+      ],
+      "routed_decision": "failed_transfer",
+      "nearest_train_sim": 0.9459,
+      "nearest_train_cat": "failed_transfer",
+      "nearest_train_text": "Why hasn't my transfer gone through"
+    }
+  ]
+}

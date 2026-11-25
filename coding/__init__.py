@@ -1,1 +1,1 @@
-"""Core algorithms for the Alfred Lab AI Engineer assignment."""
+"""Part 1: Core evaluation, calibration, and routing modules."""

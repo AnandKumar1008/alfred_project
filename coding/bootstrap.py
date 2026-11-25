@@ -1,72 +1,234 @@
+"""Bootstrap confidence intervals with exact-test coverage floors.
+
+Approach: metric_ci computes accuracy or per-class recall over m relevant rows
+and bootstraps via default_rng(seed). paired_diff_ci bootstraps x_A - x_B on
+the same rows. Exact Wilson (single metric) and McNemar-style (paired diff)
+floors widen intervals that are narrower than discrete data supports.
+Edge cases: Empty/unequal/non-1D inputs, unknown metric, cls on accuracy, missing
+cls on recall, empty cls, level outside (0,1), n_resamples < 100, invalid k/n
+all raise ValueError. Significant is False whenever the floor contains 0.
+Limits: Wilson/McNemar assume i.i.d. test items (not grouped/clustered data).
+"""
+
+from __future__ import annotations
+
 from dataclasses import dataclass
+import math
+
 import numpy as np
+
 
 @dataclass(frozen=True)
 class Interval:
     estimate: float
-    low: float
+    low: float           # reported, after the floor
     high: float
-    boot_low: float
+    boot_low: float      # raw percentile bootstrap
     boot_high: float
     level: float
     n_items: int
-    widened: bool
-    significant: bool
+    widened: bool        # the floor moved low or high
+    significant: bool    # low > 0 or high < 0 (paired); False in metric_ci
 
-def _wilson(k: int, n: int, level: float):
-    if n<=0 or k<0 or k>n: raise ValueError("require 0 <= k <= n and n > 0")
-    # Normal quantile without scipy (Acklam approximation).
-    a=(1-level)/2; z=_norm_ppf(1-a); ph=k/n; den=1+z*z/n
-    center=(ph+z*z/(2*n))/den; half=z*np.sqrt(ph*(1-ph)/n+z*z/(4*n*n))/den
-    return max(0.,center-half),min(1.,center+half)
 
-def _norm_ppf(p):
-    # Peter Acklam's rational approximation.
-    a=[-3.969683028665376e+01,2.209460984245205e+02,-2.759285104469687e+02,1.383577518672690e+02,-3.066479806614716e+01,2.506628277459239e+00]
-    b=[-5.447609879822406e+01,1.615858368580409e+02,-1.556989798598866e+02,6.680131188771972e+01,-1.328068155288572e+01]
-    c=[-7.784894002430293e-03,-3.223964580411365e-01,-2.400758277161838e+00,-2.549732539343734e+00,4.374664141464968e+00,2.938163982698783e+00]
-    d=[7.784695709041462e-03,3.224671290700398e-01,2.445134137142996e+00,3.754408661907416e+00]
-    if p<.02425:
-        q=np.sqrt(-2*np.log(p)); return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1)
-    if p>1-.02425: return -_norm_ppf(1-p)
-    q=p-.5; r=q*q
-    return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q/(((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1)
+def _inv_norm_cdf(level: float) -> float:
+    """Compute z = Phi^-1(1 - (1 - level) / 2) to machine precision using stdlib erf."""
+    p = (1.0 + level) / 2.0
+    # Initial guess via Abramowitz & Stegun 26.2.23
+    t = math.sqrt(-2.0 * math.log(1.0 - p))
+    c0, c1, c2 = 2.515517, 0.802853, 0.010328
+    d1, d2, d3 = 1.432788, 0.189269, 0.001308
+    z = t - (c0 + c1 * t + c2 * t * t) / (1.0 + d1 * t + d2 * t * t + d3 * t * t * t)
 
-def wilson_interval(k: int, n: int, level: float=0.95) -> tuple[float,float]:
-    if not 0<level<1: raise ValueError("level must be in (0,1)")
-    return _wilson(k,n,level)
+    # Newton-Raphson refinement on Phi(z) - p = 0
+    inv_sqrt2 = 1.0 / math.sqrt(2.0)
+    inv_sqrt2pi = 1.0 / math.sqrt(2.0 * math.pi)
+    for _ in range(5):
+        cdf = 0.5 * (1.0 + math.erf(z * inv_sqrt2))
+        pdf = inv_sqrt2pi * math.exp(-0.5 * z * z)
+        z -= (cdf - p) / pdf
+    return z
 
-def _validate(y,p,metric,cls,level,n_resamples):
-    y,p=np.asarray(y),np.asarray(p)
-    if y.ndim!=1 or p.ndim!=1 or len(y)==0 or y.shape!=p.shape: raise ValueError("inputs must be non-empty equal-length vectors")
-    if metric not in ('accuracy','recall'): raise ValueError("unknown metric")
-    if metric == 'accuracy' and cls is not None: raise ValueError("cls is only valid for recall")
-    if not 0<level<1 or not isinstance(n_resamples,int) or n_resamples<100: raise ValueError("invalid level or n_resamples (<100)")
-    if metric=='recall':
-        if cls is None: raise ValueError("recall requires cls")
-        mask=y==cls
-        if not mask.any(): raise ValueError("cls has no true members")
-        return (p[mask]==y[mask]).astype(float)
-    return (p==y).astype(float)
 
-def _interval(x,level,n_resamples,seed):
-    m=len(x); est=float(x.mean()); rng=np.random.default_rng(seed); idx=rng.integers(0,m,size=(n_resamples,m)); stats=x[idx].mean(1)
-    alpha=(1-level)/2; blo,bhi=np.quantile(stats,[alpha,1-alpha]); floorlo,floorhi=_wilson(int(x.sum()),m,level)
-    lo=min(float(blo),floorlo); hi=max(float(bhi),floorhi)
-    return Interval(est,lo,hi,float(blo),float(bhi),level,m,lo<float(blo)-1e-15 or hi>float(bhi)+1e-15,lo>0 or hi<0)
+def _validate_level(level: float) -> float:
+    """Validate confidence level strictly in (0, 1)."""
+    if isinstance(level, bool) or not isinstance(level, (int, float, np.number)):
+        raise ValueError(f"level must be a float in (0, 1); got {level!r}.")
+    lv = float(level)
+    if not math.isfinite(lv) or lv <= 0.0 or lv >= 1.0:
+        raise ValueError(f"level must be in (0, 1); got {level!r}.")
+    return lv
 
-def metric_ci(y_true: np.ndarray,y_pred: np.ndarray,metric: str='accuracy',cls: int|None=None,level: float=.95,n_resamples: int=2000,seed: int=0)->Interval:
-    x=_validate(y_true,y_pred,metric,cls,level,n_resamples); r=_interval(x,level,n_resamples,seed)
-    return Interval(r.estimate,r.low,r.high,r.boot_low,r.boot_high,r.level,r.n_items,r.widened,False)
 
-def paired_diff_ci(y_true: np.ndarray,pred_a: np.ndarray,pred_b: np.ndarray,metric: str='accuracy',cls: int|None=None,level: float=.95,n_resamples: int=2000,seed: int=0)->Interval:
-    a=_validate(y_true,pred_a,metric,cls,level,n_resamples); b=_validate(y_true,pred_b,metric,cls,level,n_resamples)
-    if len(a)!=len(b): raise ValueError("paired metric populations differ")
-    x=a-b; m=len(x); est=float(x.mean()); rng=np.random.default_rng(seed); idx=rng.integers(0,m,size=(n_resamples,m)); stats=x[idx].mean(1); alpha=(1-level)/2; blo,bhi=np.quantile(stats,[alpha,1-alpha])
-    d=int(np.count_nonzero(x)); only_a=int(np.count_nonzero(x>0)); only_b=int(np.count_nonzero(x<0))
-    if d:
-        ql,qh=_wilson(only_a,d,level); floorlo,floorhi=((2*ql-1)*d/m,(2*qh-1)*d/m)
+def wilson_interval(k: int, n: int, level: float = 0.95) -> tuple[float, float]:
+    """Return exact-score Wilson confidence interval (low, high) for k/n."""
+    if isinstance(k, bool) or not isinstance(k, (int, np.integer)):
+        raise ValueError(f"k must be an integer; got {k!r}.")
+    if isinstance(n, bool) or not isinstance(n, (int, np.integer)):
+        raise ValueError(f"n must be an integer; got {n!r}.")
+    k_i = int(k)
+    n_i = int(n)
+    if n_i < 1:
+        raise ValueError(f"n must be >= 1; got {n_i}.")
+    if k_i < 0 or k_i > n_i:
+        raise ValueError(f"k must satisfy 0 <= k <= n; got k={k_i}, n={n_i}.")
+    lv = _validate_level(level)
+
+    z = _inv_norm_cdf(lv)
+    z2 = z * z
+    p_hat = k_i / n_i
+    denom = 1.0 + z2 / n_i
+    centre = (p_hat + z2 / (2.0 * n_i)) / denom
+    half = (z / denom) * math.sqrt(p_hat * (1.0 - p_hat) / n_i + z2 / (4.0 * n_i * n_i))
+    return (max(0.0, centre - half), min(1.0, centre + half))
+
+
+def _validate_eval_args(
+    y_true: np.ndarray,
+    preds: tuple[np.ndarray, ...],
+    metric: str,
+    cls: int | None,
+    level: float,
+    n_resamples: int,
+    seed: int,
+) -> tuple[np.ndarray, list[np.ndarray], float]:
+    """Validate inputs shared by metric_ci and paired_diff_ci."""
+    yt = np.asarray(y_true)
+    if yt.ndim != 1 or len(yt) == 0:
+        raise ValueError("y_true must be a non-empty 1-D array.")
+    n = len(yt)
+
+    pred_arrs: list[np.ndarray] = []
+    for i, p in enumerate(preds):
+        pa = np.asarray(p)
+        if pa.ndim != 1 or len(pa) != n:
+            raise ValueError(f"Prediction array {i} must be 1-D of length {n}; got shape {pa.shape}.")
+        pred_arrs.append(pa)
+
+    if metric not in ("accuracy", "recall"):
+        raise ValueError(f"Unknown metric {metric!r}; expected 'accuracy' or 'recall'.")
+    if metric == "recall":
+        if cls is None or isinstance(cls, bool) or not isinstance(cls, (int, np.integer)):
+            raise ValueError(f"recall requires integer cls; got {cls!r}.")
+    elif cls is not None:
+        raise ValueError("cls must be None when metric='accuracy'.")
+
+    lv = _validate_level(level)
+    if isinstance(n_resamples, bool) or not isinstance(n_resamples, (int, np.integer)) or n_resamples < 100:
+        raise ValueError(f"n_resamples must be an integer >= 100; got {n_resamples!r}.")
+    if isinstance(seed, bool) or not isinstance(seed, (int, np.integer)):
+        raise ValueError(f"seed must be an integer; got {seed!r}.")
+    return yt, pred_arrs, lv
+
+
+def _correctness_vector(
+    y_true: np.ndarray, y_pred: np.ndarray, metric: str, cls: int | None
+) -> np.ndarray:
+    """Return binary 1/0 correctness indicator over relevant rows."""
+    correct = (y_pred == y_true).astype(np.float64)
+    if metric == "accuracy":
+        return correct
+    mask = y_true == int(cls)  # type: ignore[arg-type]
+    if not np.any(mask):
+        raise ValueError(f"No rows with true label cls={cls}.")
+    return correct[mask]
+
+
+def metric_ci(
+    y_true: np.ndarray,
+    y_pred: np.ndarray,
+    metric: str = "accuracy",
+    cls: int | None = None,
+    level: float = 0.95,
+    n_resamples: int = 2000,
+    seed: int = 0,
+) -> Interval:
+    """Compute bootstrap confidence interval with Wilson score floor for one model."""
+    yt, [yp], lv = _validate_eval_args(y_true, (y_pred,), metric, cls, level, n_resamples, seed)
+    x = _correctness_vector(yt, yp, metric, cls)
+    m = len(x)
+    estimate = float(np.mean(x))
+
+    alpha = (1.0 - lv) / 2.0
+    rng = np.random.default_rng(int(seed))
+    idx = rng.integers(0, m, size=(int(n_resamples), m))
+    stats = x[idx].mean(axis=1)
+    boot_low, boot_high = (float(v) for v in np.quantile(stats, [alpha, 1.0 - alpha]))
+
+    floor_low, floor_high = wilson_interval(int(np.sum(x)), m, lv)
+    low = min(boot_low, floor_low)
+    high = max(boot_high, floor_high)
+    widened = (low < boot_low) or (high > boot_high)
+
+    return Interval(
+        estimate=estimate,
+        low=low,
+        high=high,
+        boot_low=boot_low,
+        boot_high=boot_high,
+        level=lv,
+        n_items=m,
+        widened=widened,
+        significant=False,
+    )
+
+
+def paired_diff_ci(
+    y_true: np.ndarray,
+    pred_a: np.ndarray,
+    pred_b: np.ndarray,
+    metric: str = "accuracy",
+    cls: int | None = None,
+    level: float = 0.95,
+    n_resamples: int = 2000,
+    seed: int = 0,
+) -> Interval:
+    """Compute paired bootstrap CI for (A - B) floored by a McNemar-style interval."""
+    yt, [pa, pb], lv = _validate_eval_args(
+        y_true, (pred_a, pred_b), metric, cls, level, n_resamples, seed
+    )
+    x_a = _correctness_vector(yt, pa, metric, cls)
+    x_b = _correctness_vector(yt, pb, metric, cls)
+    x = x_a - x_b
+    m = len(x)
+    estimate = float(np.mean(x))
+
+    alpha = (1.0 - lv) / 2.0
+    rng = np.random.default_rng(int(seed))
+    idx = rng.integers(0, m, size=(int(n_resamples), m))
+    stats = x[idx].mean(axis=1)
+    boot_low, boot_high = (float(v) for v in np.quantile(stats, [alpha, 1.0 - alpha]))
+
+    only_a = (x_a == 1.0) & (x_b == 0.0)
+    only_b = (x_a == 0.0) & (x_b == 1.0)
+    b_cnt = int(np.sum(only_a))
+    d_cnt = b_cnt + int(np.sum(only_b))
+
+    if d_cnt > 0:
+        ql, qh = wilson_interval(b_cnt, d_cnt, lv)
+        floor_low = (2.0 * ql - 1.0) * d_cnt / m
+        floor_high = (2.0 * qh - 1.0) * d_cnt / m
     else:
-        z=_norm_ppf(1-alpha); u=z*z/(m+z*z); floorlo,floorhi=-u,u
-    lo=min(float(blo),floorlo); hi=max(float(bhi),floorhi)
-    return Interval(est,lo,hi,float(blo),float(bhi),level,m,lo<float(blo)-1e-15 or hi>float(bhi)+1e-15,not (lo<=0<=hi))
+        z = _inv_norm_cdf(lv)
+        z2 = z * z
+        u = z2 / (m + z2)
+        floor_low = -u
+        floor_high = u
+
+    low = min(boot_low, floor_low)
+    high = max(boot_high, floor_high)
+    widened = (low < boot_low) or (high > boot_high)
+    floor_has_zero = floor_low <= 0.0 <= floor_high
+    significant = (not floor_has_zero) and ((low > 0.0) or (high < 0.0))
+
+    return Interval(
+        estimate=estimate,
+        low=low,
+        high=high,
+        boot_low=boot_low,
+        boot_high=boot_high,
+        level=lv,
+        n_items=m,
+        widened=widened,
+        significant=significant,
+    )

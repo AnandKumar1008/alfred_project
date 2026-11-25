@@ -1,7 +1,13 @@
-.venv/
+# Dataset & large binary artifacts (per assignment rules)
+project/data/
+*.csv
 __pycache__/
+*.pyc
 .pytest_cache/
-*.py[cod]
-data/*.csv
-models/*.joblib
-reports/evaluation.json
+*.pkl
+*.pt
+*.onnx
+*.joblib
+!project/models/routing_bundle.joblib
+.DS_Store
+Thumbs.db
